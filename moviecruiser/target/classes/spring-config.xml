@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/context
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd
+   http://www.springframework.org/schema/data/jpa 
+    http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+
+	<context:component-scan
+		base-package="com.cognizant.moviecruiser" />
+
+	<!-- Configure the data source bean -->
+	<bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/moviecruise" />
+		<property name="username" value="root" />
+		<property name="password" value="password" />
+	</bean>
+
+	<!-- Create default configuration for Hibernate -->
+	<bean id="hibernateJpaVendorAdapter"
+		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+
+	<!-- Configure the entity manager factory bean -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter" />
+		<!-- Set JPA properties -->
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.enable_lazy_load_no_trans">true</prop>
+				<prop key="javax.persistence.schema-generation.database.action">none</prop>
+				<prop key="hibernate.ejb.use_class_enhancer">true</prop>
+			</props>
+		</property>
+		<!-- Set base package of your entities -->
+		<property name="packagesToScan" value="com.cognizant.moviecruiser" />
+		<!-- Set share cache mode -->
+		<property name="sharedCacheMode" value="ENABLE_SELECTIVE" />
+		<!-- Set validation mode -->
+		<property name="validationMode" value="NONE" />
+	</bean>
+
+	<!-- Configure the transaction manager bean -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<!-- Enable annotation driven transaction management -->
+	<tx:annotation-driven />
+
+	<!-- Configure Spring Data JPA and set the base package of the repository 
+		interfaces -->
+	<jpa:repositories base-package="com.cognizant.moviecruiser.repository" />
+
+
+
+	<bean id="dateFormat" class="java.text.SimpleDateFormat">
+		<constructor-arg value="yyyy-MM-dd" />
+	</bean>
+
+	<!-- avatar bean -->
+	<bean id="avatar" class="com.cognizant.moviecruiser.model.Movie">
+		<property name="id" value="1" />
+		<property name="title" value="Avatar" />
+		<property name="boxOffice" value="$2,787,965,087" />
+		<property name="active" value="Yes" />
+		<property name="dateOfLaunch">
+			<bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="2017-03-15" />
+			</bean>
+		</property>
+		<property name="genre" value="Science Fiction" />
+		<property name="hasTeaser" value="Yes" />
+	</bean>
+
+	<!-- avengers -->
+	<bean id="avengers" class="com.cognizant.moviecruiser.model.Movie">
+		<property name="id" value="2" />
+		<property name="title" value="The Avengers" />
+		<property name="boxOffice" value="$1,518,812,988" />
+		<property name="active" value="Yes" />
+		<property name="dateOfLaunch">
+			<bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="2017-12-23" />
+			</bean>
+		</property>
+		<property name="genre" value="Super Hero" />
+		<property name="hasTeaser" value="No" />
+	</bean>
+
+	<!-- titanic bean -->
+	<bean id="titanic" class="com.cognizant.moviecruiser.model.Movie">
+		<property name="id" value="3" />
+		<property name="title" value="Titanic" />
+		<property name="boxOffice" value="$2,187,463,944" />
+		<property name="active" value="Yes" />
+		<property name="dateOfLaunch">
+			<bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="2018-08-23" />
+			</bean>
+		</property>
+		<property name="genre" value="Romance" />
+		<property name="hasTeaser" value="No" />
+	</bean>
+	
+
+	<!-- jurassic bean -->
+	<bean id="jurassic" class="com.cognizant.moviecruiser.model.Movie">
+		<property name="id" value="4" />
+		<property name="title" value="The Jurassic World" />
+		<property name="boxOffice" value="$1,671,713,208" />
+		<property name="active" value="No" />
+		<property name="dateOfLaunch">
+			<bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="2017-07-02" />
+			</bean>
+		</property>
+		<property name="genre" value="Science Fiction" />
+		<property name="hasTeaser" value="Yes" />
+	</bean>
+
+	<!-- endgame bean -->
+	<bean id="endgame" class="com.cognizant.moviecruiser.model.Movie">
+		<property name="id" value="5" />
+		<property name="title" value="Avengers:End Game" />
+		<property name="boxOffice" value="$2,750,760,348" />
+		<property name="active" value="Yes" />
+		<property name="dateOfLaunch">
+			<bean factory-bean="dateFormat" factory-method="parse">
+				<constructor-arg value="2022-11-02" />
+			</bean>
+		</property>
+		<property name="genre" value="Super Hero" />
+		<property name="hasTeaser" value="Yes" />
+	</bean>
+
+	<bean id="movies" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<ref bean="avatar" />
+				<ref bean="avengers" />
+				<ref bean="titanic" />
+				<ref bean="jurassic" />
+				<ref bean="endgame" />
+			</list>
+		</constructor-arg>
+	</bean>
+</beans>
